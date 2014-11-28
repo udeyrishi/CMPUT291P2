@@ -1,6 +1,7 @@
 package common;
 
 
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Date;
 
@@ -37,7 +38,7 @@ public class UIO extends SimpleUIO {
 				return super.getInputInteger(message);
 			}
 			catch (NumberFormatException e) {
-				System.out.println("Invalid input. Try again.");
+				System.err.println("Invalid input. Try again.");
 			}
 		}
 	}
@@ -56,8 +57,17 @@ public class UIO extends SimpleUIO {
 				return super.getInputDate(message);
 			}
 			catch (IllegalArgumentException e) {
-				System.out.println("Invalid input. Try again.");
+				System.err.println("Invalid input. Try again.");
 			}
+		}
+	}
+	
+	@Override
+	public void writeToFile(String filename, String content) {
+		try {
+			super.writeToFile(filename, content);
+		} catch (FileNotFoundException fe) {
+			System.err.println("File location not valid.");
 		}
 	}
 

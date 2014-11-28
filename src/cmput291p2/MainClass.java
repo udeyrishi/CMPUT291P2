@@ -1,6 +1,7 @@
 package cmput291p2;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import common.UIO;
 
@@ -24,7 +25,8 @@ public class MainClass {
 		table.createDatabase();
 	}
 	
-	private final String fileloc = "/tmp/shahzeb/database";
+	private final String fileloc = "/tmp/shahzeb1/database";
+	private final String answers = "/tmp/shahzeb1/answers";
 	private Structure table;
 	private UIO io;
 	
@@ -51,28 +53,51 @@ public class MainClass {
 				table.populateDatabase(100000);
 				return false;
 			case 2:
-				System.out.println(table.retrieveWithKey(
-											io.getInputString("Enter key: ")).toString());
+				processRetrieveWithKey();
 				return false;
 			case 3:
-				printArrayListKVPair(table.retrieveWithData(
-											io.getInputString("Enter data: ")));
+				processRetrieveWithData();
 				return false;
 			case 4:
-				printArrayListKVPair(table.retrieveWithRangeOfKeys(
-											io.getInputString("Enter first key: "), 
-											io.getInputString("Enter second key: ")));
+				processRetrieveWithRangeOfKeys();
 				return false;
-			case 5:
+			case 5: case 6:
 				table.destroyDatabase();
-				return false;
-			case 6:
-				io.cleanUp();
 				return true;
 			default:
 				System.out.println("Option not recognized.");
+				printWelcomeMessage();
 				return false;
 		}
+	}
+
+	private void processRetrieveWithKey() {
+		KVPair<String,String> result;
+		long start_time = Calendar.getInstance().getTimeInMillis();
+		result = table.retrieveWithKey(io.getInputString("Enter key: "));
+		long elapsed_time = Calendar.getInstance().getTimeInMillis() - start_time;
+		io.writeToFile(answers, result.toString());
+		printNumResultsAndTime(1, elapsed_time);
+	}
+
+	private void processRetrieveWithData() {
+		ArrayList<KVPair<String,String>> result;
+		long start_time = Calendar.getInstance().getTimeInMillis();
+		result = table.retrieveWithData(io.getInputString("Enter data: "));
+		long elapsed_time = Calendar.getInstance().getTimeInMillis() - start_time;
+		io.writeToFile(answers, arrayListKVPairToString(result));
+		printNumResultsAndTime(result.size(), elapsed_time);
+	}
+
+	private void processRetrieveWithRangeOfKeys() {
+		ArrayList<KVPair<String,String>> result;
+		long start_time = Calendar.getInstance().getTimeInMillis();
+		result = table.retrieveWithRangeOfKeys(
+				io.getInputString("Enter first key: "), 
+				io.getInputString("Enter second key: "));
+		long elapsed_time = Calendar.getInstance().getTimeInMillis() - start_time;
+		io.writeToFile(answers, arrayListKVPairToString(result));
+		printNumResultsAndTime(result.size(), elapsed_time);
 	}
 
 	private void printWelcomeMessage() {
@@ -84,11 +109,16 @@ public class MainClass {
 						+ "6. Quit");
 	}
 	
-	private <K,V> void printArrayListKVPair(ArrayList<KVPair<K,V>> list) {
-		System.out.println("-----");
+	private <K,V> String arrayListKVPairToString(ArrayList<KVPair<K,V>> list) {
+		String res = "";
 		for (KVPair<K,V> pair : list) {
-			System.out.println(pair.toString());
+			res += pair.toString() + "\n\n";
 		}
+		return res;
+	}
+	
+	private void printNumResultsAndTime(int num_res, long time) {
+		System.out.println("Number of results: "+num_res+" , Time taken: "+time+" ms");
 	}
 
 }

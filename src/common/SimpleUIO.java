@@ -1,6 +1,8 @@
 package common;
 
+import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -111,6 +113,12 @@ public class SimpleUIO {
 	public void printErrorAndExit(String s) {
 		System.err.println(s);
 		System.exit(0);
+	}
+	
+	public void writeToFile(String filename, String content) throws FileNotFoundException {
+		PrintWriter file = new PrintWriter(filename);
+		file.println(content);
+		file.close();
 	}
 	
 }

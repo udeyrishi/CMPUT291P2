@@ -18,6 +18,6 @@ public class KVPair<K,V>{
 	}
 	
 	public String toString() {
-		return "("+getKey()+","+getValue()+")";
+		return getKey()+"\n"+getValue();
 	}
 }
