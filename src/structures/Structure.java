@@ -163,7 +163,8 @@ public abstract class Structure {
 	 *  gives too much data back. The work around is to use only the first x bytes
 	 *  of the array returned by getData().
 	 *  
-	 *  Credit to http://stackoverflow.com/questions/1100371/grabbing-a-segment-of-an-array-in-java
+	 *  Credit to 
+	 *  http://stackoverflow.com/questions/1100371/grabbing-a-segment-of-an-array-in-java
 	 *  for mentioning Arrays.copyOfRange.
 	 */
 	String DBEntryToString(DatabaseEntry entry) {

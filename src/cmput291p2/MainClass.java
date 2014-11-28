@@ -26,7 +26,7 @@ public class MainClass {
 	}
 	
 	private final String fileloc = "/tmp/shahzeb1/database";
-	private final String answers = "/tmp/shahzeb1/answers";
+	private final String answersloc = "/tmp/shahzeb1/answers";
 	private Structure table;
 	private UIO io;
 	
@@ -73,31 +73,46 @@ public class MainClass {
 
 	private void processRetrieveWithKey() {
 		KVPair<String,String> result;
+		String search_key = io.getInputString("Enter key: ");
+		
 		long start_time = Calendar.getInstance().getTimeInMillis();
-		result = table.retrieveWithKey(io.getInputString("Enter key: "));
+		result = table.retrieveWithKey(search_key);
 		long elapsed_time = Calendar.getInstance().getTimeInMillis() - start_time;
-		io.writeToFile(answers, result.toString());
-		printNumResultsAndTime(1, elapsed_time);
+		
+		if (result.getValue().isEmpty()) {
+			System.out.println("No such key in database.");
+		} else {
+			String query_info = numResultsTimeToString(1, elapsed_time);
+			System.out.println(query_info);
+			io.writeToFile(answersloc, query_info + "\n\n" + result.toString());
+		}
 	}
 
 	private void processRetrieveWithData() {
 		ArrayList<KVPair<String,String>> result;
+		String search_data = io.getInputString("Enter data: ");
+		
 		long start_time = Calendar.getInstance().getTimeInMillis();
-		result = table.retrieveWithData(io.getInputString("Enter data: "));
+		result = table.retrieveWithData(search_data);
 		long elapsed_time = Calendar.getInstance().getTimeInMillis() - start_time;
-		io.writeToFile(answers, arrayListKVPairToString(result));
-		printNumResultsAndTime(result.size(), elapsed_time);
+		
+		String query_info = numResultsTimeToString(result.size(), elapsed_time);
+		System.out.println(query_info);
+		io.writeToFile(answersloc, query_info + "\n\n" + arrayListKVPairToString(result));
 	}
 
 	private void processRetrieveWithRangeOfKeys() {
 		ArrayList<KVPair<String,String>> result;
+		String first_key = io.getInputString("Enter first key: ");
+		String second_key = io.getInputString("Enter second key: ");
+		
 		long start_time = Calendar.getInstance().getTimeInMillis();
-		result = table.retrieveWithRangeOfKeys(
-				io.getInputString("Enter first key: "), 
-				io.getInputString("Enter second key: "));
+		result = table.retrieveWithRangeOfKeys(first_key, second_key);
 		long elapsed_time = Calendar.getInstance().getTimeInMillis() - start_time;
-		io.writeToFile(answers, arrayListKVPairToString(result));
-		printNumResultsAndTime(result.size(), elapsed_time);
+		
+		String query_info = numResultsTimeToString(result.size(), elapsed_time);
+		System.out.println(query_info);
+		io.writeToFile(answersloc, query_info + "\n\n" + arrayListKVPairToString(result));
 	}
 
 	private void printWelcomeMessage() {
@@ -117,8 +132,8 @@ public class MainClass {
 		return res;
 	}
 	
-	private void printNumResultsAndTime(int num_res, long time) {
-		System.out.println("Number of results: "+num_res+" , Time taken: "+time+" ms");
+	private String numResultsTimeToString(int num_res, long time) {
+		return "Number of results: "+num_res+" , Time taken: "+time+" ms";
 	}
 
 }

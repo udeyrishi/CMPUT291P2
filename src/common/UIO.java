@@ -38,7 +38,7 @@ public class UIO extends SimpleUIO {
 				return super.getInputInteger(message);
 			}
 			catch (NumberFormatException e) {
-				System.err.println("Invalid input. Try again.");
+				System.out.println("Invalid input. Try again.");
 			}
 		}
 	}
@@ -57,7 +57,7 @@ public class UIO extends SimpleUIO {
 				return super.getInputDate(message);
 			}
 			catch (IllegalArgumentException e) {
-				System.err.println("Invalid input. Try again.");
+				System.out.println("Invalid input. Try again.");
 			}
 		}
 	}
@@ -67,7 +67,7 @@ public class UIO extends SimpleUIO {
 		try {
 			super.writeToFile(filename, content);
 		} catch (FileNotFoundException fe) {
-			System.err.println("File location not valid.");
+			System.out.println("File location not valid.");
 		}
 	}
 
