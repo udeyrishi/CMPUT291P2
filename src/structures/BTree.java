@@ -1,41 +1,30 @@
 package structures;
 
-public class BTree implements Structure {
+import java.io.FileNotFoundException;
 
+import com.sleepycat.db.Database;
+import com.sleepycat.db.DatabaseConfig;
+import com.sleepycat.db.DatabaseException;
+import com.sleepycat.db.DatabaseType;
+
+import common.UIO;
+
+public class BTree extends Structure {
+
+	public BTree(String fileloc, UIO io) {
+		super(fileloc, io);
+		name = "BTree";
+	}
+	
 	@Override
 	public void createDatabase() {
-		// TODO Auto-generated method stub
-		
+		config = new DatabaseConfig();
+		config.setType(DatabaseType.BTREE);
+		config.setAllowCreate(true);
+		try {
+			db = new Database(fileloc, name, config);
+		} catch (FileNotFoundException | DatabaseException e) {
+			io.printErrorAndExit("Folder does not exist or failed to create database.\n"+e.toString());
+		}
 	}
-
-	@Override
-	public void populateDatabase() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void destroyDatabase() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void retrieveWithKey() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void retrieveWithData() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void retrieveWithRangeOfKeys() {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

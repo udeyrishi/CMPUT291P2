@@ -108,4 +108,9 @@ public class SimpleUIO {
 	    return String.format("to_date('%s','DD-MON-YYYY')", rv); 
 	}
 	
+	public void printErrorAndExit(String s) {
+		System.err.println(s);
+		System.exit(0);
+	}
+	
 }
