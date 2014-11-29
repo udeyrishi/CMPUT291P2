@@ -77,5 +77,27 @@ public class IndexFile extends Structure {
 		
 		return results;
 	}
+	
+	@Override
+	public void closeDatabase() {
+		try {
+			db.close();
+			revdb.close();
+		} catch (DatabaseException e) {
+			io.printErrorAndExit("Failed to close database.\n"+e.toString());
+		} catch (NullPointerException ne) {
+		}
+	}
+
+	@Override
+	public void destroyDatabase() {
+		closeDatabase();
+		try {
+			Database.remove(fileloc, null, null);
+			Database.remove(fileloc+"rev", null, null);
+		} catch (FileNotFoundException | DatabaseException e) {
+			io.printErrorAndExit("Folder does not exist or failed to remove database.\n"+e.toString());
+		}
+	}
 
 }
