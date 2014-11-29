@@ -13,6 +13,7 @@ import com.sleepycat.db.DatabaseEntry;
 import com.sleepycat.db.DatabaseException;
 import com.sleepycat.db.DatabaseType;
 import com.sleepycat.db.OperationStatus;
+import com.sleepycat.db.Transaction;
 
 import common.UIO;
 
@@ -72,12 +73,17 @@ public abstract class Structure {
 //				System.out.println(new String(key.getData()) + "," + new String(value.getData()));
 //			}
 
-			try {
-				db.putNoOverwrite(null, key, value);
-			} catch (DatabaseException e) {
-				io.printErrorAndExit("Error inserting key,value into table.\n"+e.toString());
-			}
+			insert(null, key, value);
 		}
+	}
+	
+	OperationStatus insert(Transaction txn, DatabaseEntry key, DatabaseEntry value) {
+		try {
+			return db.putNoOverwrite(null, key, value);
+		} catch (DatabaseException e) {
+			io.printErrorAndExit("Error inserting key,value into table.\n"+e.toString());
+		}
+		return null;
 	}
 	
 	public void closeDatabase() {
@@ -112,14 +118,17 @@ public abstract class Structure {
 	
 	public ArrayList<KVPair<String,String>> retrieveWithRangeOfKeys(String key1, String key2) {
 		ArrayList<KVPair<String,String>> results = new ArrayList<KVPair<String,String>>();
-		DatabaseEntry key = new DatabaseEntry("".getBytes());
+		DatabaseEntry key = new DatabaseEntry(key1.getBytes());
 		DatabaseEntry value = new DatabaseEntry("".getBytes());
 		try {
 			Cursor cursor = db.openCursor(null, new CursorConfig());
+			cursor.getSearchKeyRange(key, value, null);
+			results.add(new KVPair<String,String>(DBEntryToString(key), DBEntryToString(value)));
+			
 			while (!cursor.getNext(key, value, null).equals(OperationStatus.NOTFOUND)) {
-				if ((DBEntryToString(key).compareTo(key1) >= 0) && 
-					(DBEntryToString(key).compareTo(key2) < 0))
-					results.add(new KVPair<String,String>(DBEntryToString(key), DBEntryToString(value)));
+				if (DBEntryToString(key).compareTo(key2) > 0)
+					break;
+				results.add(new KVPair<String,String>(DBEntryToString(key), DBEntryToString(value)));
 			}
 			
 			cursor.close();
