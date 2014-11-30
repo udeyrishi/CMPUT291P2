@@ -117,11 +117,11 @@ public class MainClass {
 	}
 	
 	private <K,V> String arrayListKVPairToString(ArrayList<KVPair<K,V>> list) {
-		String res = "";
+		StringBuilder res = new StringBuilder();
 		for (KVPair<K,V> pair : list) {
-			res += pair.toString() + "\n\n";
+			res.append(pair.toString() + "\n\n");
 		}
-		return res;
+		return res.toString();
 	}
 	
 	private String numResultsTimeToString(int num_res, long time) {
