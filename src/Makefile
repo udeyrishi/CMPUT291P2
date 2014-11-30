@@ -1,4 +1,6 @@
-JFLAGS = -cp /usr/local/BerkeleyDB.6.1/lib/db.jar:.
+DBJARPATH = /usr/share/java/db.jar
+
+JFLAGS = -cp $(DBJARPATH):.
 JC = javac
 .SUFFIXES: .java .class
 .java.class:

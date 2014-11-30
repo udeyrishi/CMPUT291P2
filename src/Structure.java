@@ -13,20 +13,20 @@ import com.sleepycat.db.OperationStatus;
 import com.sleepycat.db.Transaction;
 
 public abstract class Structure {
-	
+
 	protected UIO io;
 	protected String fileloc;
 	protected Database db;
 	protected DatabaseConfig config;
 	protected String name;
-	
+
 	public Structure(String fileloc, UIO io) {
 		this.io = io;
 		this.fileloc = fileloc;
 	}
-	
+
 	public abstract void createDatabase();
-	
+
 	protected void createBerkeleyDatabase(DatabaseType type) {
 		config = new DatabaseConfig();
 		config.setType(type);
@@ -39,24 +39,24 @@ public abstract class Structure {
 			io.printErrorAndExit("Failed to create database.\n"+e.toString());
 		}
 	}
-	
+
 	public void populateDatabase(int size) {
-		Random rand = new Random(999);
+		Random rand = new Random(1000000);
 		for (int i = 0; i < size; ++i)
 			insert(null, getRandomDBEntry(rand), getRandomDBEntry(rand));
 	}
-	
+
 	private DatabaseEntry getRandomDBEntry(Random rand) {
 		int range = 64 + rand.nextInt( 64 );
 		String s = "";
-		for ( int j = 0; j < range; j++ ) 
+		for ( int j = 0; j < range; j++ )
 			s+=(new Character((char)(97+rand.nextInt(26)))).toString();
 
 		DatabaseEntry rv = new DatabaseEntry(s.getBytes());
-		rv.setSize(s.length()); 
+		rv.setSize(s.length());
 		return rv;
 	}
-	
+
 	protected OperationStatus insert(Transaction txn, DatabaseEntry key, DatabaseEntry value) {
 		try {
 			return db.putNoOverwrite(null, key, value);
@@ -65,7 +65,7 @@ public abstract class Structure {
 		}
 		return null;
 	}
-	
+
 	protected void closeDatabase() {
 		try {
 			db.close();
@@ -94,10 +94,10 @@ public abstract class Structure {
 		} catch (DatabaseException e) {
 			io.printErrorAndExit("Problem retrieving from database.\n"+e.toString());
 		}
-		
+
 		return new KVPair<String,String>(new String(key.getData()), new String(value.getData()));
 	}
-	
+
 	public ArrayList<KVPair<String,String>> retrieveWithRangeOfKeys(String key1, String key2) {
 		ArrayList<KVPair<String,String>> results = new ArrayList<KVPair<String,String>>();
 		DatabaseEntry key = new DatabaseEntry(key1.getBytes());
@@ -105,23 +105,28 @@ public abstract class Structure {
 		try {
 			Cursor cursor = db.openCursor(null, new CursorConfig());
 			cursor.getSearchKeyRange(key, value, null);
+
+            if ((DBEntryToString(value).isEmpty()) ||
+                (DBEntryToString(key).compareTo(key2) > 0))
+                return results;
+
 			results.add(new KVPair<String,String>(DBEntryToString(key), DBEntryToString(value)));
-			
+
 			while (!cursor.getNext(key, value, null).equals(OperationStatus.NOTFOUND)) {
 				if (DBEntryToString(key).compareTo(key2) > 0)
 					break;
 				results.add(new KVPair<String,String>(DBEntryToString(key), DBEntryToString(value)));
 			}
-			
+
 			cursor.close();
-			
+
 		} catch (DatabaseException e) {
 			io.printErrorAndExit("Problem retrieving from database.\n"+e.toString());
 		}
-		
+
 		return results;
 	}
-	
+
 
 	public ArrayList<KVPair<String,String>> retrieveWithData(String value_search) {
 		ArrayList<KVPair<String,String>> results = new ArrayList<KVPair<String,String>>();
@@ -133,28 +138,28 @@ public abstract class Structure {
 				if (DBEntryToString(value).equals(value_search))
 					results.add(new KVPair<String,String>(DBEntryToString(key), DBEntryToString(value)));
 			}
-			
+
 			cursor.close();
-			
+
 		} catch (DatabaseException e) {
 			io.printErrorAndExit("Problem retrieving from database.\n"+e.toString());
 		}
-		
+
 		return results;
 	}
-	
+
 	/*
 	 * 	There is an insanely annoying bug hidden here. When using a cursor to
 	 * 	go through the database, the keys would always be perfect. But the values
 	 * 	would often randomly get padded with information from other values so that
 	 * 	all the values were the same length.
-	 * 	
+	 *
 	 *  This only happened if you used the actual getData() method of DatabaseEntry.
-	 *  Funnily enough, the getSize() method reports the right size but getData() 
+	 *  Funnily enough, the getSize() method reports the right size but getData()
 	 *  gives too much data back. The work around is to use only the first x bytes
 	 *  of the array returned by getData().
-	 *  
-	 *  Credit to 
+	 *
+	 *  Credit to
 	 *  http://stackoverflow.com/questions/1100371/grabbing-a-segment-of-an-array-in-java
 	 *  for mentioning Arrays.copyOfRange.
 	 */

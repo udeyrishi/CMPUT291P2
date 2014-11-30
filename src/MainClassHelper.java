@@ -4,23 +4,23 @@ import java.util.Calendar;
 
 public class MainClassHelper {
 
-	private final String fileloc = "/home/udeyrishi/Desktop/database";
-	//private final String fileloc = "/tmp/shahzeb1_db/database";
+	//private final String fileloc = "/home/udeyrishi/Desktop/database";
+	private final String fileloc = "/tmp/shahzeb1/database";
 	private final String answersloc = "./answers";
 	private Structure table;
 	private UIO io;
-	
+
 	public MainClassHelper(String dbtype, UIO io) {
 		this.io = io;
 		table = getCorrectStructure(dbtype);
 		table.createDatabase();
 	}
-	
+
 	private Structure getCorrectStructure(String dbtype) {
 		if (dbtype.equals("btree")) return new BTree(fileloc, io);
 		else if (dbtype.equals("hash")) return new Hash(fileloc, io);
 		else if (dbtype.equals("indexfile")) return new IndexFile(fileloc, io);
-		
+
 		io.printErrorAndExit("Structure type not recognized.");
 		return null;
 	}
@@ -32,7 +32,7 @@ public class MainClassHelper {
 			quit_flag = processOptions(io.getInputInteger("BDB: "));
 		}
 	}
-	
+
 	private Boolean processOptions(int option) {
 		switch (option) {
 			case 1:
@@ -60,11 +60,11 @@ public class MainClassHelper {
 	private void processRetrieveWithKey() {
 		KVPair<String,String> result;
 		String search_key = io.getInputString("Enter key: ");
-		
+
 		long start_time = Calendar.getInstance().getTimeInMillis();
 		result = table.retrieveWithKey(search_key);
 		long elapsed_time = Calendar.getInstance().getTimeInMillis() - start_time;
-		
+
 		if (result.getValue().isEmpty()) {
 			System.out.println("No such key in database.");
 		} else {
@@ -77,11 +77,11 @@ public class MainClassHelper {
 	private void processRetrieveWithData() {
 		ArrayList<KVPair<String,String>> result;
 		String search_data = io.getInputString("Enter data: ");
-		
+
 		long start_time = Calendar.getInstance().getTimeInMillis();
 		result = table.retrieveWithData(search_data);
 		long elapsed_time = Calendar.getInstance().getTimeInMillis() - start_time;
-		
+
 		String query_info = numResultsTimeToString(result.size(), elapsed_time);
 		System.out.println(query_info);
 		io.writeToFile(answersloc, query_info + "\n\n" + arrayListKVPairToString(result));
@@ -91,11 +91,11 @@ public class MainClassHelper {
 		ArrayList<KVPair<String,String>> result;
 		String first_key = io.getInputString("Enter first key: ");
 		String second_key = io.getInputString("Enter second key: ");
-		
+
 		long start_time = Calendar.getInstance().getTimeInMillis();
 		result = table.retrieveWithRangeOfKeys(first_key, second_key);
 		long elapsed_time = Calendar.getInstance().getTimeInMillis() - start_time;
-		
+
 		String query_info = numResultsTimeToString(result.size(), elapsed_time);
 		System.out.println(query_info);
 		io.writeToFile(answersloc, query_info + "\n\n" + arrayListKVPairToString(result));
@@ -109,7 +109,7 @@ public class MainClassHelper {
 						+ "5. Destroy the database\n"
 						+ "6. Quit");
 	}
-	
+
 	private <K,V> String arrayListKVPairToString(ArrayList<KVPair<K,V>> list) {
 		StringBuilder res = new StringBuilder();
 		for (KVPair<K,V> pair : list) {
@@ -117,7 +117,7 @@ public class MainClassHelper {
 		}
 		return res.toString();
 	}
-	
+
 	private String numResultsTimeToString(int num_res, long time) {
 		return "Number of results: "+num_res+" , Time taken: "+time+" ms";
 	}
