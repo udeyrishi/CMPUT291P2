@@ -109,6 +109,7 @@ public class SimpleUIO {
 	}
 	
 	public void printErrorAndExit(String s) {
+		cleanUp();
 		System.err.println(s);
 		System.exit(1);
 	}

@@ -14,16 +14,16 @@ import com.sleepycat.db.Transaction;
 
 public abstract class Structure {
 	
+	protected UIO io;
+	protected String fileloc;
+	protected Database db;
+	protected DatabaseConfig config;
+	protected String name;
+	
 	public Structure(String fileloc, UIO io) {
 		this.io = io;
 		this.fileloc = fileloc;
 	}
-	
-	UIO io;
-	String fileloc;
-	Database db;
-	DatabaseConfig config;
-	String name;
 	
 	public abstract void createDatabase();
 	
@@ -66,7 +66,7 @@ public abstract class Structure {
 		return null;
 	}
 	
-	public void closeDatabase() {
+	protected void closeDatabase() {
 		try {
 			db.close();
 		} catch (DatabaseException e) {
@@ -158,7 +158,7 @@ public abstract class Structure {
 	 *  http://stackoverflow.com/questions/1100371/grabbing-a-segment-of-an-array-in-java
 	 *  for mentioning Arrays.copyOfRange.
 	 */
-	String DBEntryToString(DatabaseEntry entry) {
+	protected String DBEntryToString(DatabaseEntry entry) {
 		return new String(Arrays.copyOfRange(entry.getData(), 0, entry.getSize()));
 	}
 }
