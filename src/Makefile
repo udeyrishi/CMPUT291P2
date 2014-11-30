@@ -6,6 +6,7 @@ JC = javac
 
 CLASSES = \
 		MainClass.java \
+		MainClassHelper.java \
 		UIO.java \
 		SimpleUIO.java \
 		KVPair.java \

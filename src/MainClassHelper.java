@@ -102,9 +102,9 @@ public class MainClassHelper {
 	}
 
 	private void printWelcomeMessage() {
-		System.out.println("1 Create and populate a database\n"
-						+ "2 Retrieve records with a given key\n"
-						+ "3 Retrieve records with a given data\n"
+		System.out.println("1. Create and populate a database\n"
+						+ "2. Retrieve records with a given key\n"
+						+ "3. Retrieve records with a given data\n"
 						+ "4. Retrieve records with a given range of key values\n"
 						+ "5. Destroy the database\n"
 						+ "6. Quit");
