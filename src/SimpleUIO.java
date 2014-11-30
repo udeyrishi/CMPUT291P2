@@ -1,5 +1,3 @@
-package common;
-
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.PrintWriter;

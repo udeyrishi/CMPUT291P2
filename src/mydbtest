@@ -1,0 +1,4 @@
+#!/bin/bash
+
+java -cp /usr/local/BerkeleyDB.6.1/lib/db.jar:. \
+     -Djava.library.path=/usr/local/BerkeleyDB.6.1/lib/ MainClass $1

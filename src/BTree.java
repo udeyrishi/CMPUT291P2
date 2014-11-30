@@ -1,8 +1,4 @@
-package structures;
-
 import com.sleepycat.db.DatabaseType;
-
-import common.UIO;
 
 public class BTree extends Structure {
 

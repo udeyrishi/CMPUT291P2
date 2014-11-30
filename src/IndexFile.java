@@ -1,8 +1,5 @@
-package structures;
-
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-
 import com.sleepycat.db.Cursor;
 import com.sleepycat.db.CursorConfig;
 import com.sleepycat.db.Database;
@@ -12,8 +9,6 @@ import com.sleepycat.db.DatabaseException;
 import com.sleepycat.db.DatabaseType;
 import com.sleepycat.db.OperationStatus;
 import com.sleepycat.db.Transaction;
-
-import common.UIO;
 
 public class IndexFile extends Structure {
 

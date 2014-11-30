@@ -1,15 +1,5 @@
-package cmput291p2;
-
 import java.util.ArrayList;
 import java.util.Calendar;
-
-import common.UIO;
-
-import structures.BTree;
-import structures.Hash;
-import structures.IndexFile;
-import structures.KVPair;
-import structures.Structure;
 
 public class MainClass {
 	
@@ -25,7 +15,8 @@ public class MainClass {
 		table.createDatabase();
 	}
 	
-	private final String fileloc = "/tmp/shahzeb1/database";
+	private final String fileloc = "/home/udeyrishi/Desktop/database";
+	//private final String fileloc = "/tmp/shahzeb1_db/database";
 	private final String answersloc = "./answers";
 
 	private Structure table;

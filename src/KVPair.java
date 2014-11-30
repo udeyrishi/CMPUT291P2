@@ -1,5 +1,3 @@
-package structures;
-
 public class KVPair<K,V>{
 	public KVPair(K key, V val) {
 		this.key = key;
