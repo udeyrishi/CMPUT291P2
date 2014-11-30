@@ -26,7 +26,8 @@ public class MainClass {
 	}
 	
 	private final String fileloc = "/tmp/shahzeb1/database";
-	private final String answersloc = "/tmp/shahzeb1/answers";
+	private final String answersloc = "./answers";
+
 	private Structure table;
 	private UIO io;
 	

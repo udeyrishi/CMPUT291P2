@@ -32,52 +32,37 @@ public abstract class Structure {
 	
 	public abstract void createDatabase();
 	
-	public void createBerkeleyDatabase(DatabaseType type) {
+	protected void createBerkeleyDatabase(DatabaseType type) {
 		config = new DatabaseConfig();
 		config.setType(type);
 		config.setAllowCreate(true);
 		try {
 			db = new Database(fileloc, name, config);
-		} catch (FileNotFoundException | DatabaseException e) {
-			io.printErrorAndExit("Folder does not exist or failed to create database.\n"+e.toString());
+		} catch (FileNotFoundException e) {
+			io.printErrorAndExit("Folder does not exist. Failed to create database.\n"+e.toString());
+		} catch (DatabaseException e) {
+			io.printErrorAndExit("Failed to create database.\n"+e.toString());
 		}
 	}
 	
 	public void populateDatabase(int size) {
 		Random rand = new Random(999);
-		DatabaseEntry key, value;
-		String s1, s2;
-		int range;
-		
-		/* Note that this sequence is very similar to 
-		 * the provided sample populateTable.
-		 */
-		for (int i = 0; i < size; i++) {
-			range = 64 + rand.nextInt( 64 );
-			s1 = "";
-			for ( int j = 0; j < range; j++ ) 
-				s1+=(new Character((char)(97+rand.nextInt(26)))).toString();
-
-			key = new DatabaseEntry(s1.getBytes());
-			key.setSize(s1.length()); 
-
-			range = 64 + rand.nextInt( 64 );
-			s2 = "";
-			for ( int j = 0; j < range; j++ ) 
-				s2+=(new Character((char)(97+rand.nextInt(26)))).toString();
-			
-			value = new DatabaseEntry(s2.getBytes());
-			value.setSize(s2.length()); 
-			
-//			if (rand.nextInt(100000) == 0) {
-//				System.out.println(new String(key.getData()) + "," + new String(value.getData()));
-//			}
-
-			insert(null, key, value);
-		}
+		for (int i = 0; i < size; ++i)
+			insert(null, getRandomDBEntry(rand), getRandomDBEntry(rand));
 	}
 	
-	OperationStatus insert(Transaction txn, DatabaseEntry key, DatabaseEntry value) {
+	private DatabaseEntry getRandomDBEntry(Random rand) {
+		int range = 64 + rand.nextInt( 64 );
+		String s = "";
+		for ( int j = 0; j < range; j++ ) 
+			s+=(new Character((char)(97+rand.nextInt(26)))).toString();
+
+		DatabaseEntry rv = new DatabaseEntry(s.getBytes());
+		rv.setSize(s.length()); 
+		return rv;
+	}
+	
+	protected OperationStatus insert(Transaction txn, DatabaseEntry key, DatabaseEntry value) {
 		try {
 			return db.putNoOverwrite(null, key, value);
 		} catch (DatabaseException e) {
@@ -99,8 +84,10 @@ public abstract class Structure {
 		closeDatabase();
 		try {
 			Database.remove(fileloc, null, null);
-		} catch (FileNotFoundException | DatabaseException e) {
-			io.printErrorAndExit("Folder does not exist or failed to remove database.\n"+e.toString());
+		} catch (FileNotFoundException e) {
+			io.printErrorAndExit("Folder does not exist. Failed to remove database.\n"+e.toString());
+		} catch (DatabaseException e) {
+			io.printErrorAndExit("Failed to remove database.\n"+e.toString());
 		}
 	}
 

@@ -33,13 +33,15 @@ public class IndexFile extends Structure {
 		config.setSortedDuplicates(true);
 		try {
 			revdb = new Database(fileloc+"rev", name, config);
-		} catch (FileNotFoundException | DatabaseException e) {
-			io.printErrorAndExit("Folder does not exist or failed to create database.\n"+e.toString());
+		} catch (FileNotFoundException e) {
+			io.printErrorAndExit("Folder does not exist. Failed to create database.\n"+e.toString());
+		} catch (DatabaseException e) {
+			io.printErrorAndExit("Failed to create database.\n"+e.toString());
 		}
 	}
 	
 	@Override
-	OperationStatus insert(Transaction txn, DatabaseEntry key, DatabaseEntry value) {
+	protected OperationStatus insert(Transaction txn, DatabaseEntry key, DatabaseEntry value) {
 		try {
 			revdb.put(null, value, key);
 			return db.putNoOverwrite(null, key, value);
@@ -80,8 +82,8 @@ public class IndexFile extends Structure {
 	
 	@Override
 	public void closeDatabase() {
+		super.closeDatabase();
 		try {
-			db.close();
 			revdb.close();
 		} catch (DatabaseException e) {
 			io.printErrorAndExit("Failed to close database.\n"+e.toString());
@@ -92,11 +94,13 @@ public class IndexFile extends Structure {
 	@Override
 	public void destroyDatabase() {
 		closeDatabase();
+		super.destroyDatabase();
 		try {
-			Database.remove(fileloc, null, null);
 			Database.remove(fileloc+"rev", null, null);
-		} catch (FileNotFoundException | DatabaseException e) {
-			io.printErrorAndExit("Folder does not exist or failed to remove database.\n"+e.toString());
+		} catch (FileNotFoundException e) {
+			io.printErrorAndExit("Folder does not exist. Failed to remove database.\n"+e.toString());
+		} catch (DatabaseException e) {
+			io.printErrorAndExit("Failed to remove database.\n"+e.toString());
 		}
 	}
 

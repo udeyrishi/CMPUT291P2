@@ -112,7 +112,7 @@ public class SimpleUIO {
 	
 	public void printErrorAndExit(String s) {
 		System.err.println(s);
-		System.exit(0);
+		System.exit(1);
 	}
 	
 	public void writeToFile(String filename, String content) throws FileNotFoundException {
