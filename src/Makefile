@@ -1,24 +1,22 @@
-JCC = javac
 JFLAGS = -cp /usr/local/BerkeleyDB.6.1/lib/db.jar:.
-default: MainClass UIO SimpleUIO KVPair Structure \
-		IndexFile BTree Hash
+JC = javac
+.SUFFIXES: .java .class
+.java.class:
+		$(JC) $(JFLAGS) $*.java
 
-MainClass: MainClass.java
-		$(JCC) $(JFLAGS) MainClass.java
-UIO: UIO.java
-		$(JCC) $(JFLAGS) UIO.java
-SimpleUIO: SimpleUIO.java
-		$(JCC) $(JFLAGS) SimpleUIO.java
-KVPair: KVPair.java
-			$(JCC) $(JFLAGS) KVPair.java
-Structure: Structure.java
-			$(JCC) $(JFLAGS) Structure.java
-IndexFile: IndexFile.java
-			$(JCC) $(JFLAGS) IndexFile.java
-BTree: BTree.java
-			$(JCC) $(JFLAGS) BTree.java
-Hash: Hash.java
-			$(JCC) $(JFLAGS) Hash.java
+CLASSES = \
+		MainClass.java \
+		UIO.java \
+		SimpleUIO.java \
+		KVPair.java \
+		Structure.java \
+		IndexFile.java \
+		BTree.java\
+		Hash.java
+
+default: classes
+
+classes: $(CLASSES:.java=.class)
 
 clean:
 		$(RM) *.class
