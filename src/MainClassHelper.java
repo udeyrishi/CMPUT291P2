@@ -5,7 +5,7 @@ import java.util.Calendar;
 public class MainClassHelper {
 
 	//private final String fileloc = "/home/udeyrishi/Desktop/database";
-	private final String fileloc = "/tmp/shahzeb1/database";
+	private final String fileloc = "/tmp/shahzeb1_db/database";
 	private final String answersloc = "./answers";
 	private Structure table;
 	private UIO io;
@@ -61,9 +61,9 @@ public class MainClassHelper {
 		KVPair<String,String> result;
 		String search_key = io.getInputString("Enter key: ");
 
-		long start_time = Calendar.getInstance().getTimeInMillis();
+		long start_time = System.nanoTime();
 		result = table.retrieveWithKey(search_key);
-		long elapsed_time = Calendar.getInstance().getTimeInMillis() - start_time;
+		long elapsed_time = (System.nanoTime() - start_time) / 1000;
 
 		if (result.getValue().isEmpty()) {
 			System.out.println("No such key in database.");
@@ -78,9 +78,9 @@ public class MainClassHelper {
 		ArrayList<KVPair<String,String>> result;
 		String search_data = io.getInputString("Enter data: ");
 
-		long start_time = Calendar.getInstance().getTimeInMillis();
+		long start_time = System.nanoTime();
 		result = table.retrieveWithData(search_data);
-		long elapsed_time = Calendar.getInstance().getTimeInMillis() - start_time;
+		long elapsed_time = (System.nanoTime() - start_time) / 1000;
 
 		String query_info = numResultsTimeToString(result.size(), elapsed_time);
 		System.out.println(query_info);
@@ -92,9 +92,9 @@ public class MainClassHelper {
 		String first_key = io.getInputString("Enter first key: ");
 		String second_key = io.getInputString("Enter second key: ");
 
-		long start_time = Calendar.getInstance().getTimeInMillis();
+		long start_time = System.nanoTime();
 		result = table.retrieveWithRangeOfKeys(first_key, second_key);
-		long elapsed_time = Calendar.getInstance().getTimeInMillis() - start_time;
+		long elapsed_time = (System.nanoTime() - start_time) / 1000;
 
 		String query_info = numResultsTimeToString(result.size(), elapsed_time);
 		System.out.println(query_info);
@@ -119,6 +119,6 @@ public class MainClassHelper {
 	}
 
 	private String numResultsTimeToString(int num_res, long time) {
-		return "Number of results: "+num_res+" , Time taken: "+time+" ms";
+		return "Number of results: "+num_res+" , Time taken: "+time+" microseconds";
 	}
 }
