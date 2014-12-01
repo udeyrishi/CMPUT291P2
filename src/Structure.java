@@ -95,7 +95,7 @@ public abstract class Structure {
 			io.printErrorAndExit("Problem retrieving from database.\n"+e.toString());
 		}
 
-		return new KVPair<String,String>(new String(key.getData()), new String(value.getData()));
+		return new KVPair<String,String>(DBEntryToString(key), DBEntryToString(value));
 	}
 
 	public ArrayList<KVPair<String,String>> retrieveWithRangeOfKeys(String key1, String key2) {

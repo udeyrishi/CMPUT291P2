@@ -17,7 +17,7 @@ public class Hash extends Structure {
 	public void createDatabase() {
 		createBerkeleyDatabase(DatabaseType.HASH);
 	}
-	
+
 	@Override
 	public ArrayList<KVPair<String,String>> retrieveWithRangeOfKeys(String key1, String key2) {
 		ArrayList<KVPair<String,String>> results = new ArrayList<KVPair<String,String>>();
@@ -26,17 +26,17 @@ public class Hash extends Structure {
 		try {
 			Cursor cursor = db.openCursor(null, new CursorConfig());
 			while (!cursor.getNext(key, value, null).equals(OperationStatus.NOTFOUND)) {
-				if ((DBEntryToString(key).compareTo(key1) >= 0) && 
-					(DBEntryToString(key).compareTo(key2) < 0))
+				if ((DBEntryToString(key).compareTo(key1) >= 0) &&
+					(DBEntryToString(key).compareTo(key2) <= 0))
 					results.add(new KVPair<String,String>(DBEntryToString(key), DBEntryToString(value)));
 			}
-			
+
 			cursor.close();
-			
+
 		} catch (DatabaseException e) {
 			io.printErrorAndExit("Problem retrieving from database.\n"+e.toString());
 		}
-		
+
 		return results;
 	}
 
