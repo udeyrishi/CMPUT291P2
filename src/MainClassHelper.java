@@ -4,8 +4,7 @@ import java.util.Calendar;
 
 public class MainClassHelper {
 
-	//private final String fileloc = "/home/udeyrishi/Desktop/database";
-	private final String fileloc = "/tmp/shahzeb1_db/database";
+	private final String fileloc = "/tmp/udey_db/database";
 	private final String answersloc = "./answers";
 	private Structure table;
 	private UIO io;
